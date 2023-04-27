@@ -80,6 +80,37 @@ class NewsletterByID(Resource):
 
         return response
 
+    def patch(get,id):
+        
+        newsletter = Newsletter.query.filter_by(id=id).first()
+
+        for key in request.form:
+            setattr(newsletter, key, request.form(key))
+        
+        db.session.add(newsletter)
+        db.session.commit()
+
+        newsletter_dict = newsletter.to_dict()
+
+        response = make_response(
+            newsletter_dict,
+            201
+        )
+
+        return response
+
+    def delete(get,id):
+        newsletter = Newsletter.query.filter_by(id=id).first()
+        db.session.delete(newsletter)
+        db.session.commit()
+
+        response = make_response({
+            "message": "Newsletter Deleted"},
+            200)
+
+        return response
+
+
 api.add_resource(NewsletterByID, '/newsletters/<int:id>')
 
 
